@@ -1,0 +1,27 @@
+﻿{
+    "output_file": "Settings/settings.json",
+    "Command": {
+      "type": "textbox",
+      "value": "!randombeer",
+      "label": "Command",
+      "tooltip": "The command that will be responded to.",
+      "group": "SendBeer"
+    },
+    "Cooldown": {
+      "type": "slider",
+      "value": 4,
+      "min": 1,
+      "max": 100,
+      "ticks": 1,
+      "label": "Cooldown (seconds)",
+      "tooltip": "How long the command should go on cooldown for",
+      "group": "SendBeer"
+    },
+    "Response": {
+        "type": "textbox",
+        "value": "Free beer for $randomuser - that's the $personalbeercount.!",
+        "label": "Response",
+        "tooltip": "The message that will be sent to chat when using the command.",
+        "group": "SendBeer"
+      }
+  }
