@@ -1,7 +1,7 @@
 # Streamlabs-Chatbot-Randombeer
 A Python Script for Streamlabs Chatbot to gift some random user a "Beer" (similar to currencies by SL Chatbot)
 
-# How to use
+# How to install (still "Alpha af!') 
 
 1. Go to this directory (starting from the root where Streamlabs Chatbot is installed):
 ```
@@ -13,7 +13,9 @@ Services\Scripts\
 
 If you're having trouble with loading scripts in the SL Chatbot, see: https://www.youtube.com/watch?v=l3FBpY-0880
 
+# How to use
 
+This will come a little later, when this baby is "stable at 0.0.2
 
 # Changelog
 
@@ -27,7 +29,7 @@ If you're having trouble with loading scripts in the SL Chatbot, see: https://ww
 * [x] Add .gitignore for .csv files
 * [x] check if randuser is already in file then plus 1
 * [ ] fix error when moving written temp file
-* [ ] if not found add new line with viewer name and set to 1
+* [ ] if not found add new line with viewer name and st to 1
 * [x] parse second command: check file for given username and print out value
 * [x] outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits | edit: yeah it was)
 
