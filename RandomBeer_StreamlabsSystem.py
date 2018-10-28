@@ -8,7 +8,7 @@ import os
 import sys
 import json
 from tempfile import NamedTemporaryFile
-import shutil
+from shutil import move
 import csv
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib")) #point at lib folder for classes / references
@@ -94,17 +94,17 @@ def Parse(parseString):
     randUser = Parent.GetRandomActiveUser()
     randUsername = Parent.GetDisplayName(randUser)
 
-    # Personal beercheck command called
-    if "$personalbeercount" in parseString:
-    	beerCount = getBeerCountForUsername(randUsername)
-        parseString = parseString.replace("$personalbeercount", GetCountLocalization(beerCount))
-
     # Randombeer command called
     if "$randomuser" in parseString:
 
-    	#AddBeerForUsername(randUsername)
+    	AddBeerForUsername(randUsername)
 
     	parseString = parseString.replace("$randomuser", str(randUsername))
+
+    # Personal beercheck command called
+    if "$personalbeercount" in parseString:
+        beerCount = getBeerCountForUsername(randUsername)
+        parseString = parseString.replace("$personalbeercount", GetCountLocalization(beerCount))
 
     return parseString
 
@@ -138,48 +138,50 @@ def AddBeerForUsername(username):
     with open(beerFilepath, 'rb') as csvFile, tempFile:
         csvReader = csv.reader(csvFile, delimiter=',', quotechar='"')
         csvWriter = csv.writer(tempFile, delimiter=',', quotechar='"')
-        rowCounter = 0
+        userFound = 0
 
         for row in csvReader:
-            rowCounter += 1
 
             # if it's an existing beer user in this file
             if row[0].lower() == username.lower():
+
+                # set user found to 1/true
+                userFound = 1
 
                 # update beer count for this user
                 row[1] = int(row[1]) + 1
 
-                # write new values back
-                csvWriter.writerow(row);
+                # write every line back to the new file
+                csvWriter.writerow(row)
+                
+        # flush after all lines have been written, then move temp file to destination
+        tempFile.flush()
+        try:
+            move(tempFile.name, beerFilepath)
 
-                Parent.Log('tempFile.name', tempFile.name)
-                Parent.Log('beerFilepath', beerFilepath)
+        # should have working anyways, so go on please
+        except WindowsError:
+            pass
 
-               	shutil.move(tempFile.name, beerFilepath)
-               	Parent.Log('success!')
-               	return 1
+        # if it's a new beer user for this file
+        if userFound == 0:
+            Parent.Log('info', 'user not found!')
+            #AddRowToBeerFile(rowToSave)
+            #return 1
 
-	        #if it's a new beer user for this file
-	        #else:
-	        	#AddRowToBeerFile(rowToSave)
-	        	#return 1
-
-    return 0
+    return
 
 #---------------------------
-#   Own Functions: getBeerCountForUsername: Function for Modfiying the file which contains the beer guys and according counters
+#   Own Functions: getBeerCountForUsername: Function for Modifying the file which contains the beer guys and according counters
 #---------------------------
 def getBeerCountForUsername(username):
     with open(beerFilepath, 'r') as csvFile:
         csvReader = csv.reader(csvFile, delimiter=',', quotechar='"')
-        Parent.Log('test', username.lower())
 
         for row in csvReader:
-            Parent.Log('test', row[0].lower())
+
             # if it's an existing beer user in this file
             if row[0].lower() == username.lower():
-            	Parent.Log('test', row[0].lower())
-            	Parent.Log('test', row[1])
             	return int(row[1])
 
         Parent.Log('test', 'didnt find user in any line')

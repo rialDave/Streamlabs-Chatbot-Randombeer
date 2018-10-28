@@ -31,8 +31,14 @@ If you're having trouble with loading scripts in the SL Chatbot, see: https://ww
 * [x] parse second command: check file for given username and print out value
 * [x] outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits | edit: yeah it was)
 
+**Known bugs to fix:**
+
+* Updating the beerdata.csv only saves the current line to the new file (discards all other lines that were there before) [see v0.0.2 above]
+* Settings don't apply sometimes (discovered on "cooldown" setting)
+
 **Future ideas (tell me what you need most):**
 
+* <s>outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits)</s>
 * Trigger gifs on !randombeer command
 * blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!)
 * combination with currency system from sl chatbot
