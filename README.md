@@ -27,14 +27,15 @@ If you're having trouble with loading scripts in the SL Chatbot, see: https://ww
 * [x] Add .gitignore for .csv files
 * [x] check if randuser is already in file then plus 1
 * [ ] fix error when moving written temp file
-* [ ] if not add line with viewer name and set to 1
+* [ ] if not found add new line with viewer name and set to 1
 * [x] parse second command: check file for given username and print out value
+* [x] outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits | edit: yeah it was)
 
-**Future ideas:**
+**Future ideas (tell me what you need most):**
 
 * Trigger gifs on !randombeer command
-* outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits)
 * blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!)
-* combination with currency system from sl chatbot? 
+* combination with currency system from sl chatbot
 * !top10beers
 * More exception handling and debug information for streamers
+* Automatic backup function of beerdata.csv so that the data won't get lost

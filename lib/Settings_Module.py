@@ -9,7 +9,7 @@ class MySettings(object):
 				self.__dict__ = json.load(f, encoding="utf-8")
 		except:
 			self.Command = "!randombeer"
-			self.Response = "Free beer for $randomuser - that's the $personalbeercount.!"
+			self.Response = "Free beer for $randomuser - that's the $personalbeercount already!"
 			self.Cooldown = 10
 
 	def Reload(self, jsondata):

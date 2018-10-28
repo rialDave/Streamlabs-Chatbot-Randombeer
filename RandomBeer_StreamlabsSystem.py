@@ -97,7 +97,7 @@ def Parse(parseString):
     # Personal beercheck command called
     if "$personalbeercount" in parseString:
     	beerCount = getBeerCountForUsername(randUsername)
-        parseString = parseString.replace("$personalbeercount", str(beerCount))
+        parseString = parseString.replace("$personalbeercount", GetCountLocalization(beerCount))
 
     # Randombeer command called
     if "$randomuser" in parseString:
@@ -167,7 +167,7 @@ def AddBeerForUsername(username):
     return 0
 
 #---------------------------
-#   Own Functions: ModifyBeerFile: Function for Modfiying the file which contains the beer guys and according counters
+#   Own Functions: getBeerCountForUsername: Function for Modfiying the file which contains the beer guys and according counters
 #---------------------------
 def getBeerCountForUsername(username):
     with open(beerFilepath, 'r') as csvFile:
@@ -184,6 +184,19 @@ def getBeerCountForUsername(username):
 
         Parent.Log('test', 'didnt find user in any line')
         return int(0)
+
+#---------------------------
+#   Own Functions: GetCountLocalization: Returns "first", "second" and "third" instead of 1., 2., 3. if none are mapping, then it just outputs the given number again
+# 
+#   returns: checked or translated number as a string 
+#---------------------------
+def GetCountLocalization(beerCounter):
+    if beerCounter > 3:
+        return str(beerCounter) + "th";
+
+    beerCounterMapping = ["first", "second", "third"]
+
+    return str(beerCounterMapping[beerCounter - 1]);
 
 #---------------------------
 #   Own Functions: ModifyBeerFile: Function for Modfiying the file which contains the beer guys and according counters

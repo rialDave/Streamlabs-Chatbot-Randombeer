@@ -19,7 +19,7 @@
     },
     "Response": {
         "type": "textbox",
-        "value": "Free beer for $randomuser - that's the $personalbeercount.!",
+        "value": "Free beer for $randomuser - that's the $personalbeercount already!",
         "label": "Response",
         "tooltip": "The message that will be sent to chat when using the command.",
         "group": "SendBeer"
