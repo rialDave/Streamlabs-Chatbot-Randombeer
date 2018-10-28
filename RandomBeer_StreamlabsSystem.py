@@ -102,7 +102,7 @@ def Parse(parseString):
     # Randombeer command called
     if "$randomuser" in parseString:
 
-    	AddBeerForUsername(randUsername)
+    	#AddBeerForUsername(randUsername)
 
     	parseString = parseString.replace("$randomuser", str(randUsername))
 
@@ -172,18 +172,18 @@ def AddBeerForUsername(username):
 def getBeerCountForUsername(username):
     with open(beerFilepath, 'r') as csvFile:
         csvReader = csv.reader(csvFile, delimiter=',', quotechar='"')
+        Parent.Log('test', username.lower())
 
         for row in csvReader:
-
+            Parent.Log('test', row[0].lower())
             # if it's an existing beer user in this file
             if row[0].lower() == username.lower():
-            	Parent.Log('test', username.lower())
             	Parent.Log('test', row[0].lower())
             	Parent.Log('test', row[1])
             	return int(row[1])
 
-            else:
-            	return int(0)
+        Parent.Log('test', 'didnt find user in any line')
+        return int(0)
 
 #---------------------------
 #   Own Functions: ModifyBeerFile: Function for Modfiying the file which contains the beer guys and according counters

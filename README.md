@@ -28,7 +28,7 @@ If you're having trouble with loading scripts in the SL Chatbot, see: https://ww
 * [x] check if randuser is already in file then plus 1
 * [ ] fix error when moving written temp file
 * [ ] if not add line with viewer name and set to 1
-* [ ] parse second command: check file for given username and print out value
+* [x] parse second command: check file for given username and print out value
 
 **Future ideas:**
 
