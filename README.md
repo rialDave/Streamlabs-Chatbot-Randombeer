@@ -1,7 +1,7 @@
 # Streamlabs-Chatbot-Randombeer
 A Python Script for Streamlabs Chatbot to gift some random user a "Beer" (similar to currencies by SL Chatbot)
 
-# How to install (still "Alpha af!') 
+# How to install (still "Alpha af!") 
 
 1. Go to this directory (starting from the root where Streamlabs Chatbot is installed):
 ```
@@ -15,7 +15,7 @@ If you're having trouble with loading scripts in the SL Chatbot, see: https://ww
 
 # How to use
 
-This will come a little later, when this baby is "stable at 0.0.2
+This will come a little later, when this baby is "stable"
 
 # Changelog
 
@@ -28,15 +28,21 @@ This will come a little later, when this baby is "stable at 0.0.2
 * [x] parse first command
 * [x] Add .gitignore for .csv files
 * [x] check if randuser is already in file then plus 1
-* [ ] fix error when moving written temp file
-* [ ] if not found add new line with viewer name and st to 1
 * [x] parse second command: check file for given username and print out value
 * [x] outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits | edit: yeah it was)
 
+**v0.1.0 [Alpha]**
+
+* [x] fix error when moving written temp file
+* [x] if not found add new line with viewer name and set to 1
+* [x] Biggest thing: switch from csv to json data storage
+
 **Known bugs to fix:**
 
-* Updating the beerdata.csv only saves the current line to the new file (discards all other lines that were there before) [see v0.0.2 above]
+* <s>Updating the beerdata.csv only saves the current line to the new file (discards all other lines that were there before) [see v0.0.2 above]</s>
 * Settings don't apply sometimes (discovered on "cooldown" setting)
+* "How to use" stuff still missing in this readme
+* Big one: create "beerdata.json" file if it doesn't exists (when one just installed the script)
 
 **Future ideas (tell me what you need most):**
 

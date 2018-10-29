@@ -9,7 +9,6 @@ import sys
 import json
 from tempfile import NamedTemporaryFile
 from shutil import move
-import csv
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib")) #point at lib folder for classes / references
 
@@ -57,7 +56,7 @@ def Init():
 #   [Required] Execute Data / Process messages
 #---------------------------
 def Execute(data):
-    beerFilename = os.path.join('data', 'beerdata.csv')
+    beerFilename = os.path.join('data', 'beerdata.json')
     global beerFilepath
     beerFilepath = os.path.join(os.path.dirname(__file__), beerFilename)
 
@@ -133,41 +132,18 @@ def ScriptToggled(state):
 #   Own Functions: ModifyBeerFile: Function for Modfiying the file which contains the beer guys and according counters
 #---------------------------
 def AddBeerForUsername(username):
-    tempFile = NamedTemporaryFile(delete=False)
 
-    with open(beerFilepath, 'rb') as csvFile, tempFile:
-        csvReader = csv.reader(csvFile, delimiter=',', quotechar='"')
-        csvWriter = csv.writer(tempFile, delimiter=',', quotechar='"')
-        userFound = 0
+    with open(beerFilepath, 'r') as f:
+        data = json.load(f)
+        
+        if str(username.lower()) not in data:
+            data[str(username.lower())] = 1
+        else:
+            data[str(username.lower())] += 1
 
-        for row in csvReader:
-
-            # if it's an existing beer user in this file
-            if row[0].lower() == username.lower():
-
-                # set user found to 1/true
-                userFound = 1
-
-                # update beer count for this user
-                row[1] = int(row[1]) + 1
-
-                # write every line back to the new file
-                csvWriter.writerow(row)
-                
-        # flush after all lines have been written, then move temp file to destination
-        tempFile.flush()
-        try:
-            move(tempFile.name, beerFilepath)
-
-        # should have working anyways, so go on please
-        except WindowsError:
-            pass
-
-        # if it's a new beer user for this file
-        if userFound == 0:
-            Parent.Log('info', 'user not found!')
-            #AddRowToBeerFile(rowToSave)
-            #return 1
+    os.remove(beerFilepath)
+    with open(beerFilepath, 'w') as f:
+        json.dump(data, f, indent=4)
 
     return
 
@@ -175,17 +151,14 @@ def AddBeerForUsername(username):
 #   Own Functions: getBeerCountForUsername: Function for Modifying the file which contains the beer guys and according counters
 #---------------------------
 def getBeerCountForUsername(username):
-    with open(beerFilepath, 'r') as csvFile:
-        csvReader = csv.reader(csvFile, delimiter=',', quotechar='"')
+    with open(beerFilepath, 'r') as f:
+        data = json.load(f)
 
-        for row in csvReader:
+    if str(username.lower()) not in data:
+        Parent.Log('Error', 'Oh shit, something went wrong when getting the beercount.')
+    else:
+        return data[str(username.lower())]
 
-            # if it's an existing beer user in this file
-            if row[0].lower() == username.lower():
-            	return int(row[1])
-
-        Parent.Log('test', 'didnt find user in any line')
-        return int(0)
 
 #---------------------------
 #   Own Functions: GetCountLocalization: Returns "first", "second" and "third" instead of 1., 2., 3. if none are mapping, then it just outputs the given number again
@@ -199,16 +172,3 @@ def GetCountLocalization(beerCounter):
     beerCounterMapping = ["first", "second", "third"]
 
     return str(beerCounterMapping[beerCounter - 1]);
-
-#---------------------------
-#   Own Functions: ModifyBeerFile: Function for Modfiying the file which contains the beer guys and according counters
-#---------------------------
-#def AddRowToBeerFile(beerCounter):
-#	Parent.Log('RowCounter', str(rowCounter))
-#	Parent.Log('beerCounter', str(beerCounter))
-#
-#	with open(filename, mode='w') as beerFile:
-#	   	beerFile_writer = csv.writer(employee_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-#	  	beerFile_writer.writerow(['new_username', str(beerCounter)])
-#
-#	return
