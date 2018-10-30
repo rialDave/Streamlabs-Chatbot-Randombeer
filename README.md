@@ -34,18 +34,23 @@ Changelog
 
 **v0.0.2 (was WIP)**
 
-  * [x] parse first command
-  * [x] Add .gitignore for .csv files
-  * [x] check if randuser is already in file then plus 1
-  * [x] parse second command: check file for given username and print out value
-  * [x] outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits | edit: yeah it was)
+  * parse first command
+  * Add .gitignore for .csv files
+  * check if randuser is already in file then plus 1
+  * parse second command: check file for given username and print out value
+  * outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits | edit: yeah it was)
 
 **v0.1.0 (Alpha)**
 
   * First working version: sending beer with "!randombeer" to random user which is stored and updated in json file
-  * [x] fix error when moving written temp file
-  * [x] if not found add new line with viewer name and set to 1
-  * [x] Biggest thing: switch from csv to json data storage
+  * fix error when moving written temp file
+  * if not found add new line with viewer name and set to 1
+  * Biggest thing: switch from csv to json data storage
+
+**v0.1.1**
+
+  * Mostly code style related fixes
+  * Added codacy badge
 
 **Known bugs to fix:**
 
