@@ -28,10 +28,9 @@ Version = "0.1.0"
 #---------------------------
 #   Define Global Variables
 #---------------------------
-global SettingsPath
 SettingsPath = ""
-global ScriptSettings
 ScriptSettings = MySettings()
+beerFilepath = os.path.join(os.path.dirname(__file__), beerFilename)
 
 #---------------------------
 #   [Required] Initialize Data (Only called on load)
@@ -55,8 +54,6 @@ def Init():
 #---------------------------
 def Execute(data):
     beerFilename = os.path.join('data', 'beerdata.json')
-    global beerFilepath
-    beerFilepath = os.path.join(os.path.dirname(__file__), beerFilename)
 
     # check if beerFile is completely empty and stop if true
     if os.stat(beerFilepath).st_size == 0:
@@ -83,7 +80,7 @@ def Tick():
     return
 
 #---------------------------
-#   [Optional] Parse method (Allows you to create your own custom $parameters) 
+#   [Optional] Parse method (Allows you to create your own custom $parameters)
 #
 # ORIGINAL DEF: def Parse(parseString, userid, username, targetid, targetname, message):
 #---------------------------
@@ -133,7 +130,7 @@ def AddBeerForUsername(username):
 
     with open(beerFilepath, 'r') as f:
         data = json.load(f)
-        
+
         if str(username.lower()) not in data:
             data[str(username.lower())] = 1
         else:
@@ -160,8 +157,8 @@ def getBeerCountForUsername(username):
 
 #---------------------------
 #   Own Functions: GetCountLocalization: Returns "first", "second" and "third" instead of 1., 2., 3. if none are mapping, then it just outputs the given number again
-# 
-#   returns: checked or translated number as a string 
+#
+#   returns: checked or translated number as a string
 #---------------------------
 def GetCountLocalization(beerCounter):
     if beerCounter > 3:
