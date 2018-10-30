@@ -32,7 +32,7 @@ Changelog
 
   * initial Build
 
-**v0.0.2 (was WIP)**
+**v0.0.2**
 
   * parse first command
   * Add .gitignore for .csv files
