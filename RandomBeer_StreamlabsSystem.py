@@ -30,6 +30,8 @@ Version = "0.1.0"
 #---------------------------
 SettingsPath = ""
 ScriptSettings = MySettings()
+
+beerFilename = os.path.join('data', 'beerdata.json')
 beerFilepath = os.path.join(os.path.dirname(__file__), beerFilename)
 
 #---------------------------
@@ -53,7 +55,6 @@ def Init():
 #   [Required] Execute Data / Process messages
 #---------------------------
 def Execute(data):
-    beerFilename = os.path.join('data', 'beerdata.json')
 
     # check if beerFile is completely empty and stop if true
     if os.stat(beerFilepath).st_size == 0:
