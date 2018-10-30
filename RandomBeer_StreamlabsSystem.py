@@ -7,8 +7,6 @@
 import os
 import sys
 import json
-from tempfile import NamedTemporaryFile
-from shutil import move
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib")) #point at lib folder for classes / references
 
