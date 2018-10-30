@@ -7,6 +7,8 @@
 import os
 import sys
 import json
+import time
+from datetime import datetime
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib")) #point at lib folder for classes / references
 
@@ -23,7 +25,7 @@ ScriptName = "RandomBeer"
 Website = "https://twitch.tv/rialDave/"
 Description = "Gifts a beer 'currency' to any random user in the chat and counts how many beers one user has got yet."
 Creator = "rialDave"
-Version = "0.1.1"
+Version = "0.1.1-dev"
 
 #---------------------------
 #   Define Global Variables
@@ -34,15 +36,25 @@ ScriptSettings = MySettings()
 beerFilename = os.path.join('data', 'beerdata.json')
 beerFilepath = os.path.join(os.path.dirname(__file__), beerFilename)
 
+# Configuration of keys in json file
+JSONVariablesBeercountToday = 'beercounttoday'
+JSONVariablesBeercountOverall = 'beercountoverall'
+JSONVariablesLastbeer = 'lastbeer'
+
 #---------------------------
 #   [Required] Initialize Data (Only called on load)
 #---------------------------
 def Init():
-
     #   Create Settings Directory
     directory = os.path.join(os.path.dirname(__file__), "Settings")
     if not os.path.exists(directory):
         os.makedirs(directory)
+
+    #   Check if beerfile exists, if it doesnt: creates it
+    if os.path.isfile(beerFilepath) == 0:
+        data = {}
+        with open(beerFilepath, 'w') as f:
+            json.dump(data, f, indent=4)
 
     #   Load settings
     SettingsFile = os.path.join("Settings", "settings.json")
@@ -55,13 +67,6 @@ def Init():
 #   [Required] Execute Data / Process messages
 #---------------------------
 def Execute(data):
-
-    # check if beerFile is completely empty and stop if true
-    if os.stat(beerFilepath).st_size == 0:
-    	Parent.Log('Error', "beerFile is empty! Path:")
-        Parent.Log('PathToBeerfile', beerFilepath)
-
-    #Parent.Log(Time(time.strftime("%H:%M"), 'this is a test')
     if data.IsChatMessage() and data.GetParam(0).lower() == ScriptSettings.Command and Parent.IsOnUserCooldown(ScriptName,ScriptSettings.Command,data.User):
         Parent.SendStreamMessage("Command on cooldown! Seconds remaining: " + str(Parent.GetUserCooldownDuration(ScriptName,ScriptSettings.Command,data.User)))
 
@@ -92,14 +97,19 @@ def Parse(parseString):
     # Randombeer command called
     if "$randomuser" in parseString:
 
-    	AddBeerForUsername(randUsername)
+    	AddBeerForUsername("rialDave")
 
     	parseString = parseString.replace("$randomuser", str(randUsername))
 
-    # Personal beercheck command called
-    if "$personalbeercount" in parseString:
-        beerCount = getBeerCountForUsername(randUsername)
-        parseString = parseString.replace("$personalbeercount", GetCountLocalization(beerCount))
+    # Beercheck command for "overall" called
+    if "$beercountoverall" in parseString:
+        beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountOverall)
+        parseString = parseString.replace("$beercountoverall", GetCountLocalization(beerCount))
+
+    # Beercheck command for "today" called
+    if "$beercounttoday" in parseString:
+        beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountToday)
+        parseString = parseString.replace("$beercounttoday", GetCountLocalization(beerCount))
 
     return parseString
 
@@ -129,13 +139,32 @@ def ScriptToggled(state):
 #---------------------------
 def AddBeerForUsername(username):
 
+    currenttimestamp = int(time.time())
+    currentday = datetime.fromtimestamp(currenttimestamp).strftime('%Y-%m-%d')
+
     with open(beerFilepath, 'r') as f:
         data = json.load(f)
 
+        # user doesnt exist yet
         if str(username.lower()) not in data:
-            data[str(username.lower())] = 1
+            data[str(username.lower())] = {}
+            data[str(username.lower())][JSONVariablesBeercountToday] = 1
+            data[str(username.lower())][JSONVariablesBeercountOverall] = 1
+            data[str(username.lower())][JSONVariablesLastbeer] = currentday
+
+        # user already exists
         else:
-            data[str(username.lower())] += 1
+            # new day since last beer? -> only count beercountoverall up, set beercounttoday to 1 again
+            if currentday != data[str(username.lower())][JSONVariablesLastbeer]:
+                data[str(username.lower())][JSONVariablesBeercountToday] = 1
+                data[str(username.lower())][JSONVariablesBeercountOverall] += 1
+                data[str(username.lower())][JSONVariablesLastbeer] = currentday
+
+            # same day since last beer? -> count both up
+            else:
+                data[str(username.lower())][JSONVariablesBeercountToday] += 1
+                data[str(username.lower())][JSONVariablesBeercountOverall] += 1
+                data[str(username.lower())][JSONVariablesLastbeer] = currentday
 
     os.remove(beerFilepath)
     with open(beerFilepath, 'w') as f:
@@ -144,17 +173,17 @@ def AddBeerForUsername(username):
     return
 
 #---------------------------
-#   Own Functions: getBeerCountForUsername: Function for Modifying the file which contains the beer guys and according counters
+#   Own Functions: GetBeerCountForUsernameAndType: Function for Modifying the file which contains the beer guys and according counters
+#   Params: username, beercounttype (JSONVariablesBeercountOverall or JSONVariablesBeercountToday)
 #---------------------------
-def getBeerCountForUsername(username):
+def GetBeerCountForUsernameAndType(username, beercounttype):
     with open(beerFilepath, 'r') as f:
         data = json.load(f)
 
     if str(username.lower()) not in data:
         Parent.Log('Error', 'Oh shit, something went wrong when getting the beercount.')
     else:
-        return data[str(username.lower())]
-
+        return data[str(username.lower())][beercounttype]
 
 #---------------------------
 #   Own Functions: GetCountLocalization: Returns "first", "second" and "third" instead of 1., 2., 3. if none are mapping, then it just outputs the given number again

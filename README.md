@@ -47,25 +47,32 @@ Changelog
   * if not found add new line with viewer name and set to 1
   * Biggest thing: switch from csv to json data storage
 
-**v0.1.1**
+**v0.1.1 (don't use this, was buggy)**
 
   * Mostly code style related fixes
   * Added codacy badge
 
+**v0.2.0**
+
+  * Fixes a bug of v0.1.1 that caused the script to crash on load
+  * Fixes a known bug: data file "beerdata.json" is now created on "load" of the script, if it didnt exist yet.
+  * Implements new Feature: Split Beercounter for: daily and overall counters
+
 **Known bugs to fix:**
 
   * <s>Updating the beerdata.csv only saves the current line to the new file (discards all other lines that were there before) [see v0.0.2 above]</s>
+  * <s>Big one: create "beerdata.json" file if it doesn't exists (when one just installed the script)</s>
   * Settings don't apply sometimes (discovered on "cooldown" setting)
   * "How to use" stuff still missing in this readme
-  * Big one: create "beerdata.json" file if it doesn't exists (when one just installed the script)
+  * Think about: can you set your username including umlauts (ö,ä,ü)? The script would most likely crash then
 
-**Future ideas (tell me what you need most):**
+**Future ideas in priority order (tell me what you need most):**
 
   * <s>Outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits)</s>
-  * Split Beercounter for: daily (or per stream?) and overall
-  * Trigger gifs on !randombeer command
-  * Blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!)
-  * Combination with currency system from sl chatbot
+  * <s>Split Beercounter for: daily (or per stream?) and overall</s>
+  * Blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!) and then get switch from "random active users" to "random users"
+  * Automatic backup function of beerdata.csv so that the data won't get lost
   * !top10beers
   * More exception handling and debug information for streamers
-  * Automatic backup function of beerdata.csv so that the data won't get lost
+  * Trigger gifs on !randombeer command
+  * Combination with currency system from sl chatbot
