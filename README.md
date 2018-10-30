@@ -1,6 +1,8 @@
 Streamlabs-Chatbot-Randombeer
 =============================
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/801907104a8a466eaf42e0362cb9f7b1)](https://app.codacy.com/app/rialDave/Streamlabs-Chatbot-Randombeer?utm_source=github.com&utm_medium=referral&utm_content=rialDave/Streamlabs-Chatbot-Randombeer&utm_campaign=Badge_Grade_Dashboard)
+
 A Python Script for Streamlabs Chatbot to gift some random user a "Beer" (similar to currencies by SL Chatbot)
 
 How to install (still "Alpha af!") 
