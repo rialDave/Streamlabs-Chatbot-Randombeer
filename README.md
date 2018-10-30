@@ -33,6 +33,7 @@ This will come a little later, when this baby is "stable"
 
 **v0.1.0 [Alpha]**
 
+* First minimal working version: sending beer with "!randombeer" to random user which is stored und updated in json file
 * [x] fix error when moving written temp file
 * [x] if not found add new line with viewer name and set to 1
 * [x] Biggest thing: switch from csv to json data storage
