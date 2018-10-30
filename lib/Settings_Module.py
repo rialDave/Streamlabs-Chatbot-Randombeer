@@ -6,10 +6,12 @@ class MySettings(object):
 		try:
 			with codecs.open(settingsfile, encoding="utf-8-sig", mode="r") as f:
 				self.__dict__ = json.load(f, encoding="utf-8")
-		except:
+		except Exception as ex:
 			self.Command = "!randombeer"
 			self.Response = "Free beer for $randomuser - that's the $personalbeercount already!"
 			self.Cooldown = 10
+			Parent.Log(ScriptName, "Failed to get settings from file.")
+			Parent.Log('Exception', ex)
 
 	def Reload(self, jsondata):
 		self.__dict__ = json.loads(jsondata, encoding="utf-8")
