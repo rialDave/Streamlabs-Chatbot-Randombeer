@@ -25,7 +25,7 @@ ScriptName = "RandomBeer"
 Website = "https://twitch.tv/rialDave/"
 Description = "Gifts a beer 'currency' to any random user in the chat and counts how many beers one user has got yet."
 Creator = "rialDave"
-Version = "0.2.0"
+Version = "0.2.1"
 
 #---------------------------
 #   Define Global Variables
@@ -97,7 +97,7 @@ def Parse(parseString):
     # Randombeer command called
     if "$randomuser" in parseString:
 
-    	AddBeerForUsername("rialDave")
+    	AddBeerForUsername(randUsername)
 
     	parseString = parseString.replace("$randomuser", str(randUsername))
 
@@ -196,4 +196,4 @@ def GetCountLocalization(beerCounter):
 
     beerCounterMapping = ["first", "second", "third"]
 
-    return str(beerCounterMapping[beerCounter - 1]);
+    return str(beerCounterMapping[int(beerCounter) - 1]);

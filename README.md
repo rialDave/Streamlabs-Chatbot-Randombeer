@@ -32,7 +32,7 @@ Changelog
 
   * initial Build
 
-**v0.0.2 (was WIP)**
+**v0.0.2**
 
   * parse first command
   * Add .gitignore for .csv files
@@ -58,6 +58,11 @@ Changelog
   * Fixes a known bug: data file "beerdata.json" is now created on "load" of the script, if it didnt exist yet.
   * Implements new Feature: Split Beercounter for: daily and overall counters
 
+**v0.2.1**
+
+  * Fixes a dumb bug in v2.0.0 where i forgot to remove the testing user-override^^
+  * Some preset changes and readme updated with a new idea
+
 **Known bugs to fix:**
 
   * <s>Updating the beerdata.csv only saves the current line to the new file (discards all other lines that were there before) [see v0.0.2 above]</s>
@@ -72,6 +77,7 @@ Changelog
   * <s>Split Beercounter for: daily (or per stream?) and overall</s>
   * Blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!) and then get switch from "random active users" to "random users"
   * Automatic backup function of beerdata.csv so that the data won't get lost
+  * Limit of beers for today (user gets too drunk)
   * !top10beers
   * More exception handling and debug information for streamers
   * Trigger gifs on !randombeer command
