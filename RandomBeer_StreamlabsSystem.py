@@ -97,7 +97,7 @@ def Parse(parseString):
     # Randombeer command called
     if "$randomuser" in parseString:
 
-    	AddBeerForUsername("rialDave")
+    	AddBeerForUsername(randUsername)
 
     	parseString = parseString.replace("$randomuser", str(randUsername))
 
@@ -196,4 +196,4 @@ def GetCountLocalization(beerCounter):
 
     beerCounterMapping = ["first", "second", "third"]
 
-    return str(beerCounterMapping[beerCounter - 1]);
+    return str(beerCounterMapping[int(beerCounter) - 1]);

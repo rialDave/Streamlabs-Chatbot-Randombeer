@@ -72,6 +72,7 @@ Changelog
   * <s>Split Beercounter for: daily (or per stream?) and overall</s>
   * Blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!) and then get switch from "random active users" to "random users"
   * Automatic backup function of beerdata.csv so that the data won't get lost
+  * Limit of beers for today (user gets too drunk)
   * !top10beers
   * More exception handling and debug information for streamers
   * Trigger gifs on !randombeer command
