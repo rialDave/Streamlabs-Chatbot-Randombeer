@@ -64,6 +64,11 @@ Changelog
   * Fixes a dumb bug in v2.0.0 where i forgot to remove the testing user-override^^
   * Some preset changes and readme updated with a new idea
 
+**v0.3.0**
+
+  * Implements a new feature: The bot returns a completely different response (still hardcoded) when it's the very first beer for a user.
+  * Some localization bugfixes
+
 **Known bugs to fix:**
 
   * <s>Updating the beerdata.csv only saves the current line to the new file (discards all other lines that were there before) [see v0.0.2 above]</s>
@@ -83,4 +88,4 @@ Changelog
   * !top10beers
   * More exception handling and debug information for streamers
   * Trigger gifs on !randombeer command
-  * Combination with currency system from sl chatbot
+  * Combination with currency system from sl chatbot (is this really wanted?)
