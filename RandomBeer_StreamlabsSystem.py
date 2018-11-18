@@ -96,15 +96,19 @@ def Parse(parseString):
 
     # Randombeer command called
     if "$randomuser" in parseString:
-
     	AddBeerForUsername(randUsername)
-
     	parseString = parseString.replace("$randomuser", str(randUsername))
 
     # Beercheck command for "overall" called
     if "$beercountoverall" in parseString:
         beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountOverall)
-        parseString = parseString.replace("$beercountoverall", GetCountLocalization(beerCount))
+
+        # if it's the very first beer for user overall
+        if beerCount == 1:
+            parseString = "Congratulations! That's " + randUsername + "'s very first beer ever!"
+
+        else:
+            parseString = parseString.replace("$beercountoverall", GetCountLocalization(beerCount))
 
     # Beercheck command for "today" called
     if "$beercounttoday" in parseString:
@@ -173,7 +177,7 @@ def AddBeerForUsername(username):
     return
 
 #---------------------------
-#   Own Functions: GetBeerCountForUsernameAndType: Function for Modifying the file which contains the beer guys and according counters
+#   Own Functions: GetBeerCountForUsernameAndType: Returns the current beer count of a specific type (today or overall) as int
 #   Params: username, beercounttype (JSONVariablesBeercountOverall or JSONVariablesBeercountToday)
 #---------------------------
 def GetBeerCountForUsernameAndType(username, beercounttype):
