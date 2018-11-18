@@ -23,7 +23,8 @@ If you're having trouble with loading scripts in the SL Chatbot, see: https://ww
 How to use
 ------------
 
-This will come a little later, when this baby is "stable"
+You don't really need to (and can, because the user config is still buggy) configure much.
+Just call the command "!randombeer" in your stream and have fun!
 
 Changelog
 ---------
@@ -63,22 +64,28 @@ Changelog
   * Fixes a dumb bug in v2.0.0 where i forgot to remove the testing user-override^^
   * Some preset changes and readme updated with a new idea
 
+**v0.3.0**
+
+  * Implements a new feature: The bot returns a completely different response (still hardcoded) when it's the very first beer for a user.
+  * Some localization bugfixes
+
 **Known bugs to fix:**
 
   * <s>Updating the beerdata.csv only saves the current line to the new file (discards all other lines that were there before) [see v0.0.2 above]</s>
   * <s>Big one: create "beerdata.json" file if it doesn't exists (when one just installed the script)</s>
-  * Settings don't apply sometimes (discovered on "cooldown" setting)
-  * "How to use" stuff still missing in this readme
-  * Think about: can you set your username including umlauts (ö,ä,ü)? The script would most likely crash then
+  * Settings don't apply sometimes (discovered on "cooldown" and "command" setting; seem to load the fallback from "Settings_Module.py" then til you save your script settings again with a click.
+  * <s>"How to use" stuff still missing in this readme</s>
+  * Think about: can you set a username ont Twitch to one including umlauts (ö,ä,ü)? The script would most likely crash then
 
 **Future ideas in priority order (tell me what you need most):**
 
   * <s>Outputting 1., 2. and 3. as "first" "second" and "third" (hopefully low hanging fruits)</s>
   * <s>Split Beercounter for: daily (or per stream?) and overall</s>
-  * Blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!) and then get switch from "random active users" to "random users"
-  * Automatic backup function of beerdata.csv so that the data won't get lost
+  * <s>Replace complete "parseString" if beercount is exactly 1 in Parse() so it will display a completely different response for the first beer today and maybe the first ever additionally</s>
   * Limit of beers for today (user gets too drunk)
+  * Automatic backup function of beerdata.csv so that the data won't get lost
+  * Blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!) and then get switch from "random active users" to "random users"
   * !top10beers
   * More exception handling and debug information for streamers
   * Trigger gifs on !randombeer command
-  * Combination with currency system from sl chatbot
+  * Combination with currency system from sl chatbot (is this really wanted?)

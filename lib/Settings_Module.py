@@ -8,7 +8,7 @@ class MySettings(object):
 				self.__dict__ = json.load(f, encoding="utf-8")
 		except Exception as ex:
 			self.Command = "!randombeer"
-			self.Response = "Free beer for $randomuser - that's already the $beercounttoday today and the $beercountoverall of $randomuser's life!"
+			self.Response = "Free beer for $randomuser - that's the $beercounttoday today and already the $beercountoverall of $randomuser's life!"
 			self.Cooldown = 10
 
 	def Reload(self, jsondata):
