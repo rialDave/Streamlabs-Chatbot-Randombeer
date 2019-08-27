@@ -50,7 +50,7 @@ def Init():
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    #   Check if beerfile exists, if it doesnt: creates it
+    #   Checks if beerfile exists, if it doesnt: creates it
     if os.path.isfile(beerFilepath) == 0:
         data = {}
         with open(beerFilepath, 'w') as f:
@@ -60,7 +60,7 @@ def Init():
     SettingsFile = os.path.join("Settings", "settings.json")
     SettingsPath = os.path.join(os.path.dirname(__file__), SettingsFile)
     ScriptSettings = MySettings(SettingsPath)
-    ScriptSettings.Response = "Overwritten pong! ^_^"
+    ScriptSettings.Response = "Overwritten file!"
     return
 
 #---------------------------
@@ -81,40 +81,53 @@ def Execute(data):
 
 #---------------------------
 #   [Required] Tick method (Gets called during every iteration even when there is no incoming data)
+#   I don't really know what this does, but seems to be required to at least have an empty function defined.
 #---------------------------
 def Tick():
     return
 
 #---------------------------
 #   [Optional] Parse method (Allows you to create your own custom $parameters)
+#   Here's where the magic happens, all the strings are sent and processed through this function
+#   
+#   Parent.FUNCTION allows to use functions of the Chatbot and other outside APIs (see: https://github.com/AnkhHeart/Streamlabs-Chatbot-Python-Boilerplate/wiki/Parent)
 #
 # ORIGINAL DEF: def Parse(parseString, userid, username, targetid, targetname, message):
 #---------------------------
 def Parse(parseString):
+    # get a random active user from chat and afterwards their displayname
     randUser = Parent.GetRandomActiveUser()
     randUsername = Parent.GetDisplayName(randUser)
 
+    # just a fallback, luckily this didn't happen while being live too often yet
+    if randUsername == "":
+        return "DaveDebug: generated random username was an empty string again, what the heck?"
+
     # Randombeer command called
     if "$randomuser" in parseString:
+
+        # Adds a new Beer for given Username
     	AddBeerForUsername(randUsername)
+        # Replacing the variable "$randomuser" of the configured command text with the correct username which got the new beer 
     	parseString = parseString.replace("$randomuser", str(randUsername))
 
-    # Beercheck command for "overall" called
+    # Beercheck command for "overall" called, this sets the overall beercount of the randomuser which was called here
     if "$beercountoverall" in parseString:
         beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountOverall)
 
-        # if it's the very first beer for user overall
+        # if it's the very first beer for user overall, use a different return text (hardcoded). If not: Replaces the string with the correct localization text for "beerCount"
         if beerCount == 1:
             parseString = "Congratulations! That's " + randUsername + "'s very first beer ever!"
 
         else:
             parseString = parseString.replace("$beercountoverall", GetCountLocalization(beerCount))
 
-    # Beercheck command for "today" called
+    # Beercheck command for "today" called, this sets the todays beercount for the random user which was called here
     if "$beercounttoday" in parseString:
         beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountToday)
         parseString = parseString.replace("$beercounttoday", GetCountLocalization(beerCount))
 
+    # after every necessary variable was processed: return the whole parseString
     return parseString
 
 #---------------------------
@@ -139,37 +152,39 @@ def ScriptToggled(state):
     return
 
 #---------------------------
-#   Own Functions: ModifyBeerFile: Function for Modfiying the file which contains the beer guys and according counters
+#   Own Functions: ModifyBeerFile: Function for Modfiying the file which contains the beer guys and according counters, see data/beerdata.json
 #---------------------------
 def AddBeerForUsername(username):
 
     currenttimestamp = int(time.time())
     currentday = datetime.fromtimestamp(currenttimestamp).strftime('%Y-%m-%d')
 
+    # this loads the data of the beer file beerdata.json into variable "data"
     with open(beerFilepath, 'r') as f:
         data = json.load(f)
 
-        # user doesnt exist yet
+        # check if the given username exists in data. -> user doesnt exist yet, create array of the user data, which will be stored in beerdata.json
         if str(username.lower()) not in data:
             data[str(username.lower())] = {}
             data[str(username.lower())][JSONVariablesBeercountToday] = 1
             data[str(username.lower())][JSONVariablesBeercountOverall] = 1
             data[str(username.lower())][JSONVariablesLastbeer] = currentday
 
-        # user already exists
+        # if the user already exists, update the user with added beercounts, but we need to check here if it's the first beer today or not to set the right values 
         else:
-            # new day since last beer? -> only count beercountoverall up, set beercounttoday to 1 again
+            # new day since last beer? -> only count beercountoverall up, set beercounttoday to 1 again because it's a new day to start.
             if currentday != data[str(username.lower())][JSONVariablesLastbeer]:
                 data[str(username.lower())][JSONVariablesBeercountToday] = 1
                 data[str(username.lower())][JSONVariablesBeercountOverall] += 1
                 data[str(username.lower())][JSONVariablesLastbeer] = currentday
 
-            # same day since last beer? -> count both up
+            # same day since last beer? -> count both up since we have still the same day since the last beer for the given user
             else:
                 data[str(username.lower())][JSONVariablesBeercountToday] += 1
                 data[str(username.lower())][JSONVariablesBeercountOverall] += 1
                 data[str(username.lower())][JSONVariablesLastbeer] = currentday
 
+    # after everything was modified and updated, we need to write the stuff from our "data" variable to the beerdata.json file 
     os.remove(beerFilepath)
     with open(beerFilepath, 'w') as f:
         json.dump(data, f, indent=4)
@@ -181,9 +196,14 @@ def AddBeerForUsername(username):
 #   Params: username, beercounttype (JSONVariablesBeercountOverall or JSONVariablesBeercountToday)
 #---------------------------
 def GetBeerCountForUsernameAndType(username, beercounttype):
+    # reads the beerdata.json into "data" variable again 
     with open(beerFilepath, 'r') as f:
         data = json.load(f)
 
+    # if the given username doesn't exist in data, return error. Else return the value of the beercount for this user.
+    # specialty: the submitted param "beercounttype" needs to be one of the examples in function description (also defined as global variables in the beginning of the script)
+    # so it matches with the array key and returns the correct value
+    # (this is just for saving some lines of code since it's more intelligent)
     if str(username.lower()) not in data:
         Parent.Log('Error', 'Oh shit, something went wrong when getting the beercount.')
     else:
@@ -195,9 +215,13 @@ def GetBeerCountForUsernameAndType(username, beercounttype):
 #   returns: checked or translated number as a string
 #---------------------------
 def GetCountLocalization(beerCounter):
+
+    # prepend "th" string to the beercount number if its higher than 3 
     if beerCounter > 3:
         return str(beerCounter) + "th";
 
+    # build mapping for the first three numbers to be readable.
     beerCounterMapping = ["first", "second", "third"]
 
+    # since the previously created array matches with the keys 0, 1 and 2 it can be directly used when subtracting integer value 1 from the key.
     return str(beerCounterMapping[int(beerCounter) - 1]);
