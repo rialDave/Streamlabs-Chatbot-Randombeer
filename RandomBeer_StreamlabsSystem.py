@@ -25,7 +25,7 @@ ScriptName = "RandomBeer"
 Website = "https://twitch.tv/rialDave/"
 Description = "Gifts a beer 'currency' to any random user in the chat and counts how many beers one user has got yet."
 Creator = "rialDave"
-Version = "0.3.0-dev"
+Version = "0.3.1"
 
 #---------------------------
 #   Define Global Variables
