@@ -7,6 +7,7 @@
 import os
 import sys
 import json
+import random
 import time
 from datetime import datetime
 
@@ -40,6 +41,13 @@ beerFilepath = os.path.join(os.path.dirname(__file__), beerFilename)
 JSONVariablesBeercountToday = 'beercounttoday'
 JSONVariablesBeercountOverall = 'beercountoverall'
 JSONVariablesLastbeer = 'lastbeer'
+JSONVariablesDrunkleveltoday = 'drunkleveltoday'
+
+VariablesDrunklevel = {
+    "1": 3,
+    "2": 5,
+    "3": 10
+}
 
 #---------------------------
 #   [Required] Initialize Data (Only called on load)
@@ -103,29 +111,37 @@ def Parse(parseString):
     if randUsername == "":
         return "DaveDebug: generated random username was an empty string again, what the heck?"
 
-    # Randombeer command called
-    if "$randomuser" in parseString:
+    if IsDrunkToday == False:
+        # Randombeer variable called
+        if "$randomuser" in parseString:
 
-        # Adds a new Beer for given Username
-    	AddBeerForUsername(randUsername)
-        # Replacing the variable "$randomuser" of the configured command text with the correct username which got the new beer 
-    	parseString = parseString.replace("$randomuser", str(randUsername))
+            # Adds a new Beer for given Username
+            AddBeerForUsername(randUsername)
+            # Replacing the variable "$randomuser" of the configured command text with the correct username which got the new beer 
+            parseString = parseString.replace("$randomuser", str(randUsername))
 
-    # Beercheck command for "overall" called, this sets the overall beercount of the randomuser which was called here
-    if "$beercountoverall" in parseString:
-        beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountOverall)
+        # Beercountoverall variable for "overall" called, this sets the overall beercount of the randomuser which was called here
+        if "$beercountoverall" in parseString:
+            beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountOverall)
 
-        # if it's the very first beer for user overall, use a different return text (hardcoded). If not: Replaces the string with the correct localization text for "beerCount"
-        if beerCount == 1:
-            parseString = "Congratulations! That's " + randUsername + "'s very first beer ever!"
+            # if it's the very first beer for user overall, use a different return text (hardcoded). If not: Replaces the string with the correct localization text for "beerCount"
+            if beerCount == 1:
+                parseString = "Congratulations! That's " + randUsername + "'s very first beer ever!"
 
-        else:
-            parseString = parseString.replace("$beercountoverall", GetCountLocalization(beerCount))
+            else:
+                parseString = parseString.replace("$beercountoverall", GetCountLocalization(beerCount))
 
-    # Beercheck command for "today" called, this sets the todays beercount for the random user which was called here
-    if "$beercounttoday" in parseString:
-        beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountToday)
-        parseString = parseString.replace("$beercounttoday", GetCountLocalization(beerCount))
+        # Beercounttoday variable for "today" called, this sets the todays beercount for the random user which was called here
+        if "$beercounttoday" in parseString:
+            beerCount = GetBeerCountForUsernameAndType(randUsername, JSONVariablesBeercountToday)
+            parseString = parseString.replace("$beercounttoday", GetCountLocalization(beerCount))
+    else:
+        if GetDrunkLevel(randUsername) == 1:
+            parseString = "Oh shit " + randUsername + ", you probably didn't eat a Schweinsbron before drinking - he's already drunk today!"
+        if GetDrunkLevel(randUsername) == 2:
+            parseString = randUsername + ", you should stop the fun now, you've got to work tomorrow!"
+        if GetDrunkLevel(randUsername) == 3:
+            parseString = "Already 5 Maß?! Are you crazy " + randUsername + "? Now I understand why you can't walk straight anymore."
 
     # after every necessary variable was processed: return the whole parseString
     return parseString
@@ -169,6 +185,7 @@ def AddBeerForUsername(username):
             data[str(username.lower())][JSONVariablesBeercountToday] = 1
             data[str(username.lower())][JSONVariablesBeercountOverall] = 1
             data[str(username.lower())][JSONVariablesLastbeer] = currentday
+            data[str(username.lower())][JSONVariablesDrunkleveltoday] = GetRandomDrunkLevel()
 
         # if the user already exists, update the user with added beercounts, but we need to check here if it's the first beer today or not to set the right values 
         else:
@@ -177,12 +194,14 @@ def AddBeerForUsername(username):
                 data[str(username.lower())][JSONVariablesBeercountToday] = 1
                 data[str(username.lower())][JSONVariablesBeercountOverall] += 1
                 data[str(username.lower())][JSONVariablesLastbeer] = currentday
+                data[str(username.lower())][JSONVariablesDrunkleveltoday] = GetRandomDrunkLevel()
 
             # same day since last beer? -> count both up since we have still the same day since the last beer for the given user
             else:
-                data[str(username.lower())][JSONVariablesBeercountToday] += 1
-                data[str(username.lower())][JSONVariablesBeercountOverall] += 1
-                data[str(username.lower())][JSONVariablesLastbeer] = currentday
+                if IsDrunkToday(username) == False:
+                    data[str(username.lower())][JSONVariablesBeercountToday] += 1
+                    data[str(username.lower())][JSONVariablesBeercountOverall] += 1
+                    data[str(username.lower())][JSONVariablesLastbeer] = currentday
 
     # after everything was modified and updated, we need to write the stuff from our "data" variable to the beerdata.json file 
     os.remove(beerFilepath)
@@ -218,10 +237,54 @@ def GetCountLocalization(beerCounter):
 
     # prepend "th" string to the beercount number if its higher than 3 
     if beerCounter > 3:
-        return str(beerCounter) + "th";
+        return str(beerCounter) + "th"
 
     # build mapping for the first three numbers to be readable.
     beerCounterMapping = ["first", "second", "third"]
 
     # since the previously created array matches with the keys 0, 1 and 2 it can be directly used when subtracting integer value 1 from the key.
-    return str(beerCounterMapping[int(beerCounter) - 1]);
+    return str(beerCounterMapping[int(beerCounter) - 1])
+
+
+#---------------------------
+#   Own Functions: GetRandomDrunkLevel
+#
+#   returns: int drunklevel
+#---------------------------
+def GetRandomDrunkLevel():
+    return random.randrange(3)
+
+#---------------------------
+#   Own Functions: GetDrunkLevel
+#
+#   returns: int drunklevel of given username
+#---------------------------
+def GetDrunkLevel(username):
+    # reads the beerdata.json into "data" variable again 
+    with open(beerFilepath, 'r') as f:
+        data = json.load(f)
+
+        return data[str(username.lower())][JSONVariablesDrunkleveltoday]
+
+#---------------------------
+#   Own Functions: IsDrunkToday
+#
+#   returns: Boolean if the user is drunk or not
+#---------------------------
+def IsDrunkToday(username):
+
+    # reads the beerdata.json into "data" variable again 
+    with open(beerFilepath, 'r') as f:
+        data = json.load(f)
+
+        if (data[str(username.lower())][JSONVariablesDrunkleveltoday]):
+            
+            beercountToday = GetBeerCountForUsernameAndType(username, JSONVariablesBeercountToday)
+            drunklevelToday = data[str(username.lower())][JSONVariablesDrunkleveltoday]
+
+            if beercountToday > VariablesDrunklevel[int(drunklevelToday)]:
+                return True
+            else:
+                return False
+        else:
+            return False
