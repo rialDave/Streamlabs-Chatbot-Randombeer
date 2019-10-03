@@ -281,12 +281,15 @@ def IsDrunkToday(username):
 
         if (JSONVariablesDrunkleveltoday in data[str(username.lower())]):
             
-            beercountToday = GetBeerCountForUsernameAndType(username, JSONVariablesBeercountToday)
-            drunklevelToday = data[str(username.lower())][JSONVariablesDrunkleveltoday]
+            currenttimestamp = int(time.time())
+            currentday = datetime.fromtimestamp(currenttimestamp).strftime('%Y-%m-%d')
 
-            if (beercountToday > VariablesDrunklevel[str(drunklevelToday)]):
-                return True
-            else:
-                return False
-        else:
-            return False
+            if (currentday == data[str(username.lower())][JSONVariablesLastbeer]):
+            
+                beercountToday = GetBeerCountForUsernameAndType(username, JSONVariablesBeercountToday)
+                drunklevelToday = data[str(username.lower())][JSONVariablesDrunkleveltoday]
+
+                if (beercountToday > VariablesDrunklevel[str(drunklevelToday)]):
+                    return True
+
+    return False
