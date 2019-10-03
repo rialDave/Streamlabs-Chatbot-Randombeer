@@ -43,6 +43,8 @@ JSONVariablesBeercountOverall = 'beercountoverall'
 JSONVariablesLastbeer = 'lastbeer'
 JSONVariablesDrunkleveltoday = 'drunkleveltoday'
 
+# syntax: drunklevel-id: max. beercount for this drunklevel
+# known issue: this is checked too late in the code atm: e.g. the user will be able to get 4 instead of 3 beer when having drunklevel 1
 VariablesDrunklevel = {
     "1": 3,
     "2": 5,
@@ -111,7 +113,7 @@ def Parse(parseString):
     if randUsername == "":
         return "DaveDebug: generated random username was an empty string again, what the heck?"
 
-    if IsDrunkToday == False:
+    if IsDrunkToday(randUsername) == False:
         # Randombeer variable called
         if "$randomuser" in parseString:
 
@@ -252,7 +254,7 @@ def GetCountLocalization(beerCounter):
 #   returns: int drunklevel
 #---------------------------
 def GetRandomDrunkLevel():
-    return random.randrange(3)
+    return random.randrange(1, 4)
 
 #---------------------------
 #   Own Functions: GetDrunkLevel
@@ -277,12 +279,12 @@ def IsDrunkToday(username):
     with open(beerFilepath, 'r') as f:
         data = json.load(f)
 
-        if (data[str(username.lower())][JSONVariablesDrunkleveltoday]):
+        if (JSONVariablesDrunkleveltoday in data[str(username.lower())]):
             
             beercountToday = GetBeerCountForUsernameAndType(username, JSONVariablesBeercountToday)
             drunklevelToday = data[str(username.lower())][JSONVariablesDrunkleveltoday]
 
-            if beercountToday > VariablesDrunklevel[int(drunklevelToday)]:
+            if (beercountToday > VariablesDrunklevel[str(drunklevelToday)]):
                 return True
             else:
                 return False
