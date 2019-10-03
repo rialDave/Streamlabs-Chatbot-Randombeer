@@ -78,6 +78,10 @@ Changelog
 
   * Implements a new Feature: The drunklevel! That's basically a cap of maximum beers a user can handle before he gets drunk and doesn't receive any more beers. Currently there are 3 random drunklevels with different max beer counts hardcoded (since you have better and worse days when drinking :P).
 
+**v0.4.1**
+
+  * Fixes a bug that where drunklevel won't be reset after a new day (you'd be stuck being drunk forever :D)
+
 **Known bugs to fix:**
 
   * <s>Updating the beerdata.csv only saves the current line to the new file (discards all other lines that were there before) [see v0.0.2 above]</s>
@@ -86,6 +90,7 @@ Changelog
   * <s>"How to use" stuff still missing in this readme</s>
   * Investigation needed: can you set a username on Twitch to one including umlauts (ö,ä,ü)? The script would most likely crash then
   * Sometimes the function counts a beer for user "" (empty string)
+  * You'll be instantly sober after midnight, well^^
 
 **Future ideas in priority order (tell me what you need most):**
 
