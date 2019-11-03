@@ -98,6 +98,7 @@ Changelog
   * <s>Split Beercounter for: daily (or per stream?) and overall</s>
   * <s>Replace complete "parseString" if beercount is exactly 1 in Parse() so it will display a completely different response for the first beer today and maybe the first ever additionally</s>
   * <s>Limit of beers for today (e.g. user gets too drunk)</s>
+  * Feature: maybe add possibility to specifically gift beers to someone (maybe limited to X beers per hour or sth)
   * Automatic backup function of beerdata.csv so that the data won't get lost
   * Blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!) and then get switch from "random active users" to "random users"
   * !top10beers
