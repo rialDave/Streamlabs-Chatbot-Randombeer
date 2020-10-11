@@ -24,7 +24,7 @@ How to use
 ------------
 
 You don't really need to (and can, because the user config is still buggy) configure much.
-Just call the command "!randombeer" in your stream and have fun!
+Just call the command "!beer" in your stream and have fun!
 
 Changelog
 ---------
@@ -43,7 +43,7 @@ Changelog
 
 **v0.1.0 (Alpha)**
 
-  * First working version: sending beer with "!randombeer" to random user which is stored and updated in json file
+  * First working version: sending beer with "!beer" to random user which is stored and updated in json file
   * fix error when moving written temp file
   * if not found add new line with viewer name and set to 1
   * Biggest thing: switch from csv to json data storage
@@ -103,5 +103,5 @@ Changelog
   * Blacklist users (maybe with streamlabs blacklist) to exclude bots from getting beer (what a shame!) and then get switch from "random active users" to "random users"
   * !top10beers
   * More exception handling and debug information for streamers
-  * Trigger gifs on !randombeer command
+  * Trigger gifs on !beer command
   * Combination with currency system from sl chatbot (is this really wanted or should it always be a separate "currency"?)
