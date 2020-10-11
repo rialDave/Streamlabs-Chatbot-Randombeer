@@ -2,7 +2,7 @@
     "output_file": "Settings/settings.json",
     "Command": {
       "type": "textbox",
-      "value": "!randombeer",
+      "value": "!beer",
       "label": "Command",
       "tooltip": "The command that will be responded to.",
       "group": "SendBeer"

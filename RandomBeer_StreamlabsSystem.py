@@ -26,7 +26,7 @@ ScriptName = "RandomBeer"
 Website = "https://twitch.tv/rialDave/"
 Description = "Gifts a beer 'currency' to any random user in the chat and counts how many beers one user has got yet."
 Creator = "rialDave"
-Version = "0.4.1"
+Version = "0.4.1-dev"
 
 #---------------------------
 #   Define Global Variables
@@ -279,17 +279,19 @@ def IsDrunkToday(username):
     with open(beerFilepath, 'r') as f:
         data = json.load(f)
 
-        if (JSONVariablesDrunkleveltoday in data[str(username.lower())]):
-            
-            currenttimestamp = int(time.time())
-            currentday = datetime.fromtimestamp(currenttimestamp).strftime('%Y-%m-%d')
+        if str(username.lower()) in data:
 
-            if (currentday == data[str(username.lower())][JSONVariablesLastbeer]):
-            
-                beercountToday = GetBeerCountForUsernameAndType(username, JSONVariablesBeercountToday)
-                drunklevelToday = data[str(username.lower())][JSONVariablesDrunkleveltoday]
+            if (JSONVariablesDrunkleveltoday in data[str(username.lower())]):
+                
+                currenttimestamp = int(time.time())
+                currentday = datetime.fromtimestamp(currenttimestamp).strftime('%Y-%m-%d')
 
-                if (beercountToday > VariablesDrunklevel[str(drunklevelToday)]):
-                    return True
+                if (currentday == data[str(username.lower())][JSONVariablesLastbeer]):
+                
+                    beercountToday = GetBeerCountForUsernameAndType(username, JSONVariablesBeercountToday)
+                    drunklevelToday = data[str(username.lower())][JSONVariablesDrunkleveltoday]
+
+                    if (beercountToday > VariablesDrunklevel[str(drunklevelToday)]):
+                        return True
 
     return False
